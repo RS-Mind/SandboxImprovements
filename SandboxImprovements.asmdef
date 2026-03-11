@@ -1,0 +1,22 @@
+{
+    "name": "SandboxImprovements",
+    "references": [
+        "ModdingUtils",
+        "UnboundLib",
+        "Unity.TextMeshPro"
+    ],
+    "optionalUnityReferences": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "BepInEx.dll",
+        "0Harmony.dll",
+        "Assembly-CSharp.dll",
+        "InControl.dll",
+        "PhotonUnityNetworking.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": []
+}
