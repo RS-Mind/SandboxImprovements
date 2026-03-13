@@ -21,7 +21,7 @@ namespace SandboxImprovements
         private const string ModId = "com.rsmind.rounds.sandboximprovements";
         private const string ModName = "Sandbox Improvements";
         private const string CompatibilityModName = "SandboxImprovements";
-        public const string Version = "1.1.0";
+        public const string Version = "1.1.1";
         public const string ModInitials = "SI";
         public static SandboxImprovements instance { get; private set; }
         public static bool Debug = true;
@@ -41,10 +41,6 @@ namespace SandboxImprovements
                 UnityEngine.Debug.Log("Failed to load Fancy Card Bar asset bundle");
             }
 
-            // Add menu handlers
-            gameObject.AddComponent<MapSelectMenuHandler>();
-            gameObject.AddComponent<CardSpawnMenuHandler>();
-
             var harmony = new Harmony(ModId);
             harmony.PatchAll();
             SceneManager.sceneLoaded += CreateButtons;
@@ -55,6 +51,9 @@ namespace SandboxImprovements
         {
             instance = this;
             Unbound.RegisterMenu(ModName, () => { }, OptionGUI, null, true);
+            // Add menu handlers
+            gameObject.AddComponent<MapSelectMenuHandler>();
+            gameObject.AddComponent<CardSpawnMenuHandler>();
         }
 
         private static void CreateButtons(Scene scene, LoadSceneMode mode)

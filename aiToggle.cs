@@ -21,6 +21,10 @@ namespace SandboxImprovements
                 PlayerAI ai = player.GetComponentInChildren<PlayerAI>();
                 if (ai != null)
                     ai.enabled = aiEnabled;
+
+                PlayerAIPhilip aiPhilip = player.GetComponentInChildren<PlayerAIPhilip>();
+                if (aiPhilip != null)
+                    aiPhilip.enabled = aiEnabled;
             }
         }
     }

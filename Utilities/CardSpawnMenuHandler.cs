@@ -414,7 +414,7 @@ namespace SandboxImprovements.Utilities
                 edgePiece.color = cardColor;
             }
 
-            var textName = cardFrontObject.transform.GetChild(1);
+            var textName = cardFrontObject.transform.Find("Text_Name");
             if (textName != null)
             {
                 var textComponent = textName.GetComponent<TextMeshProUGUI>();
@@ -423,19 +423,6 @@ namespace SandboxImprovements.Utilities
                     textComponent.text = cardInfo.cardName.ToUpper();
                     textComponent.color = cardColor;
                 }
-            }
-
-            if (cardInfo.rarity == CardInfo.Rarity.Common) return;
-
-            var colorFromRarity = cardInfo.rarity == CardInfo.Rarity.Uncommon
-                ? uncommonColor
-                : rareColor;
-            foreach (var imageComponentLoop in FindObjectsInChildren(cardFrontObject.gameObject,
-                             "Triangle").Select(triangleObject =>
-                             triangleObject.GetComponent<Image>())
-                         .Where(imageComponentLoop => imageComponent != null))
-            {
-                imageComponentLoop.color = colorFromRarity;
             }
         }
 
@@ -463,6 +450,16 @@ namespace SandboxImprovements.Utilities
                         curveAnimation.PlayIn();
                     }
                 }
+
+                SandboxImprovements.instance.ExecuteAfterFrames(1, () =>
+                {
+                    try // NRE at startup, but we don't need this to work at startup, so we can fail early and try again later
+                    {
+                        foreach (var cardRarityColor in cardObject.GetComponentsInChildren<CardRarityColor>())
+                            cardRarityColor.Toggle(true);
+                    }
+                    catch { }
+                });
             }
             else
             {

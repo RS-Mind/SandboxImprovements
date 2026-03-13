@@ -1,6 +1,6 @@
 {
     "name": "SandboxImprovements",
-    "version_number": "1.1.0",
+    "version_number": "1.1.1",
     "website_url": "https://github.com/RS-Mind/SandboxImprovements",
     "description": "A set of tools to make sandbox more powerful and easy to use.",
     "dependencies": [
