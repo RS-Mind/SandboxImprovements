@@ -21,6 +21,7 @@ namespace SandboxImprovements.Utilities // Adds actions to players
         public PlayerAction hookPointEnd;
         public PlayerAction hookRoundStart;
         public PlayerAction hookRoundEnd;
+        public PlayerAction aiToggle;
 
         public PlayerActionsAdditionalData()
         {
@@ -33,6 +34,7 @@ namespace SandboxImprovements.Utilities // Adds actions to players
             hookPointEnd = null;
             hookRoundStart = null;
             hookRoundEnd = null;
+            aiToggle = null;
         }
     }
 
@@ -90,6 +92,9 @@ namespace SandboxImprovements.Utilities // Adds actions to players
             __instance.GetAdditionalData().hookRoundEnd = (PlayerAction)typeof(PlayerActions).InvokeMember("CreatePlayerAction",
                                     BindingFlags.Instance | BindingFlags.InvokeMethod |
                                     BindingFlags.NonPublic, null, __instance, new object[] { "Sandbox Call Round End" });
+            __instance.GetAdditionalData().aiToggle = (PlayerAction)typeof(PlayerActions).InvokeMember("CreatePlayerAction",
+                                    BindingFlags.Instance | BindingFlags.InvokeMethod |
+                                    BindingFlags.NonPublic, null, __instance, new object[] { "Sandbox Toggle AI" });
         }
     }
     
@@ -107,6 +112,7 @@ namespace SandboxImprovements.Utilities // Adds actions to players
             __result.GetAdditionalData().hookPointEnd.AddDefaultBinding(Key.K);
             __result.GetAdditionalData().hookRoundStart.AddDefaultBinding(Key.O);
             __result.GetAdditionalData().hookRoundEnd.AddDefaultBinding(Key.L);
+            __result.GetAdditionalData().aiToggle.AddDefaultBinding(Key.T);
         }
     }
 
@@ -118,6 +124,7 @@ namespace SandboxImprovements.Utilities // Adds actions to players
             if (GameModeManager.CurrentHandlerID != GameModeManager.SandBoxID // Only run in sandbox while not typing in chat
                 || GameObject.Find("Game/UI/UI_Game/Canvas/Console").GetComponent<TMP_InputField>().isFocused)
                 return;
+            if (__instance.GetComponentInChildren<PlayerAI>() != null) return; // No bots
 
             var playerActions = __instance.GetComponent<CharacterData>().playerActions.GetAdditionalData();
 
@@ -175,6 +182,12 @@ namespace SandboxImprovements.Utilities // Adds actions to players
                     UnityEngine.Debug.Log("Round End");
                 SandboxImprovements.instance.StartCoroutine(GameModeManager.TriggerHook(GameModeHooks.HookRoundEnd));
             }
+            if (playerActions.aiToggle.WasPressed)
+            {
+                if (SandboxImprovements.Debug)
+                    UnityEngine.Debug.Log("Toggle AI");
+                aiToggle.ToggleAI();
+            }
 
             if (SandboxImprovements.KeyHintText.activeSelf)
             {
@@ -196,6 +209,8 @@ namespace SandboxImprovements.Utilities // Adds actions to players
                     = playerActions.hookRoundStart.Bindings.Count < 1 ? " " : playerActions.hookRoundStart.Bindings[0].Name;
                 SandboxImprovements.KeyHintText.transform.Find("Round/End").GetComponent<TextMeshProUGUI>().text
                     = playerActions.hookRoundEnd.Bindings.Count < 1 ? " " : playerActions.hookRoundEnd.Bindings[0].Name;
+                SandboxImprovements.KeyHintText.transform.Find("ToggleAI/Key").GetComponent<TextMeshProUGUI>().text
+                    = playerActions.aiToggle.Bindings.Count < 1 ? " " : playerActions.aiToggle.Bindings[0].Name;
             }
         }
     }

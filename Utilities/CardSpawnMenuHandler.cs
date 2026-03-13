@@ -29,9 +29,11 @@ namespace SandboxImprovements.Utilities
         private GameObject cardObjAsset;
         private GameObject cardScrollViewAsset;
         private GameObject categoryButtonAsset;
+        private GameObject playerButtonAsset;
 
         private Transform scrollViewTrans;
         internal static Transform CategoryContent;
+        private static Transform PlayerButtonContent;
 
         private static bool sortedByName = true;
 
@@ -45,6 +47,9 @@ namespace SandboxImprovements.Utilities
         private bool toggledAll;
         private Coroutine cardVisualsCoroutine = null;
 
+        public List<int> selectedPlayers = new List<int>();
+        public Dictionary<int, GameObject> playerButtons = new Dictionary<int, GameObject>();
+
         private void Start()
         {
             instance = this;
@@ -56,6 +61,7 @@ namespace SandboxImprovements.Utilities
 
             cardScrollViewAsset = SandboxImprovements.Assets.LoadAsset<GameObject>("CardScrollView");
             categoryButtonAsset = SandboxImprovements.Assets.LoadAsset<GameObject>("CategoryButton");
+            playerButtonAsset = SandboxImprovements.Assets.LoadAsset<GameObject>("PlayerButton");
 
             cardMenuCanvas = Instantiate(cardMenu);
             DontDestroyOnLoad(cardMenuCanvas);
@@ -68,6 +74,8 @@ namespace SandboxImprovements.Utilities
             scrollViewTrans = cardMenuCanvas.transform.Find("CardMenu/ScrollViews");
 
             CategoryContent = cardMenuCanvas.transform.Find("CardMenu/Top/Categories/ButtonsScroll/Viewport/Content");
+
+            PlayerButtonContent = cardMenuCanvas.transform.Find("CardMenu/Top/Target Players/Viewport/Content");
 
             // Create and set search bar
             var searchBar = cardMenuCanvas.transform.Find("CardMenu/Top/InputField").gameObject;
@@ -141,9 +149,16 @@ namespace SandboxImprovements.Utilities
 
                     void CardAction()
                     {
-                        if (cardValue.enabled)
+                        if (selectedPlayers.Count == 0)
                         {
-                            MenuControllerHandler.instance.gameObject.GetComponent<DevConsole>().InvokeMethod("SpawnCard", cardValue.cardInfo.cardName);
+                            GameObject obj = CardChoice.instance.AddCard(cardValue.cardInfo);
+                            obj.GetComponentInChildren<CardVisuals>().firstValueToSet = true;
+                            obj.transform.root.GetComponentInChildren<ApplyCardStats>().shootToPick = true;
+                        }
+                        else foreach (int playerID in selectedPlayers)
+                        {
+                            Player player = PlayerManager.instance.players.Find(p => p.playerID == playerID);
+                            ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardValue.cardInfo, false, "", 0, 0, true);
                         }
                     }
 
@@ -232,6 +247,26 @@ namespace SandboxImprovements.Utilities
         {
             foreach (GameObject category in categoryObjs)
                 UpdateCategoryVisuals(category, CardManager.IsCategoryActive(category.name), true);
+
+            // Player Buttons
+            foreach (var button in playerButtons) // Remove buttons without players
+            { 
+                foreach (Player player in PlayerManager.instance.players)
+                    if (player.playerID == button.Key) continue;
+                Destroy(button.Value);
+                playerButtons.Remove(button.Key);
+            }
+
+            foreach (Player player in PlayerManager.instance.players) // Add buttons for new players
+            {
+                if (!playerButtons.ContainsKey(player.playerID))
+                {
+                    GameObject newButton = Instantiate(playerButtonAsset, PlayerButtonContent);
+                    newButton.transform.GetChild(1).GetComponent<Image>().color = player.GetTeamColors().color;
+                    newButton.GetComponent<PlayerButton>().playerID = player.playerID;
+                    playerButtons.Add(player.playerID, newButton);
+                }
+            }
         }
 
         private void UpdateCategoryVisuals(GameObject categoryObj, bool enabledVisuals, bool firstTime = false)

@@ -21,7 +21,7 @@ namespace SandboxImprovements
         private const string ModId = "com.rsmind.rounds.sandboximprovements";
         private const string ModName = "Sandbox Improvements";
         private const string CompatibilityModName = "SandboxImprovements";
-        public const string Version = "1.0.0";
+        public const string Version = "1.1.0";
         public const string ModInitials = "SI";
         public static SandboxImprovements instance { get; private set; }
         public static bool Debug = true;
@@ -34,7 +34,7 @@ namespace SandboxImprovements
         {
             Unbound.RegisterClientSideMod(ModId);
 
-            Assets = AssetUtils.LoadAssetBundleFromResources("sandboximprovements", typeof(SandboxImprovements).Assembly);
+            Assets = AssetUtils.LoadAssetBundleFromResources("sandbox", typeof(SandboxImprovements).Assembly);
 
             if (Assets == null)
             {

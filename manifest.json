@@ -1,9 +1,10 @@
 {
     "name": "SandboxImprovements",
-    "version_number": "1.0.0",
+    "version_number": "1.1.0",
     "website_url": "https://github.com/RS-Mind/SandboxImprovements",
-    "description": "Allows mod developers to add custom icons to the card bar.",
+    "description": "A set of tools to make sandbox more powerful and easy to use.",
     "dependencies": [
+        "Pykess-ModdingUtils-0.4.8",
 		"willis81808-UnboundLib-3.2.14"
     ]
 }
