@@ -1,3 +1,6 @@
+#### 1.1.2:
+- Fixed an issue with the card assignment buttons
+
 #### 1.1.1:
 - Made AI toggle compatible with RoundsWithBots
 - Fixed some graphical issues with the card spawn menu

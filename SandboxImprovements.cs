@@ -21,7 +21,7 @@ namespace SandboxImprovements
         private const string ModId = "com.rsmind.rounds.sandboximprovements";
         private const string ModName = "Sandbox Improvements";
         private const string CompatibilityModName = "SandboxImprovements";
-        public const string Version = "1.1.1";
+        public const string Version = "1.1.2";
         public const string ModInitials = "SI";
         public static SandboxImprovements instance { get; private set; }
         public static bool Debug = true;
@@ -38,7 +38,7 @@ namespace SandboxImprovements
 
             if (Assets == null)
             {
-                UnityEngine.Debug.Log("Failed to load Fancy Card Bar asset bundle");
+                UnityEngine.Debug.Log("Failed to load Sandbox Improvements asset bundle");
             }
 
             var harmony = new Harmony(ModId);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using InControl;
+using Photon.Pun.Simple;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -248,13 +250,19 @@ namespace SandboxImprovements.Utilities
             foreach (GameObject category in categoryObjs)
                 UpdateCategoryVisuals(category, CardManager.IsCategoryActive(category.name), true);
 
+            int[] keys = new int[playerButtons.Keys.Count];
+            playerButtons.Keys.CopyTo(keys, 0);
+
             // Player Buttons
-            foreach (var button in playerButtons) // Remove buttons without players
-            { 
+            foreach (var key in keys) // Remove buttons without players
+            {
                 foreach (Player player in PlayerManager.instance.players)
-                    if (player.playerID == button.Key) continue;
-                Destroy(button.Value);
-                playerButtons.Remove(button.Key);
+                    if (player.playerID == key)
+                    {
+                        continue;
+                    }
+                Destroy(playerButtons[key]);
+                playerButtons.Remove(key);
             }
 
             foreach (Player player in PlayerManager.instance.players) // Add buttons for new players
@@ -267,6 +275,8 @@ namespace SandboxImprovements.Utilities
                     playerButtons.Add(player.playerID, newButton);
                 }
             }
+
+            CardSpawnMenuHandler.instance.selectedPlayers.Clear();
         }
 
         private void UpdateCategoryVisuals(GameObject categoryObj, bool enabledVisuals, bool firstTime = false)
